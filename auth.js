@@ -13,7 +13,6 @@ const sessionUser = {}
 
 const debug = (req, res) => {
     // res.send(users)
-    redis.hgetall(sid, (err, userObj) => { console.log(sid + ' mapped to ' + userObj) })
 }
 
 const loginUser = (req, res) => {   
@@ -49,18 +48,21 @@ const isLoggedIn = (req, res, next) => {
     if(!sid){
          return res.sendStatus(401)
     }
-    const username = sessionUser[sid]
-    if (username){
-        req.body.username = username
-        next()
-    } else{
-        return res.sendStatus(400)
-    }
+    redis.hgetall(sid, (err, username) => { 
+        console.log(sid + ' mapped to ' + username)
+        if (username){
+            req.body.username = username
+            next()
+        } else{
+            return res.sendStatus(400)
+        }
+    })
 }
 
 const logoutUser = (req, res) => {
     console.log('Payload received:', req.body)
     delete sessionUser[req.cookies[cooKey]]
+    redis.del(req.cookies[cooKey])
     res.cookie(cooKey, "", { httpOnly: true })
     res.send("OK")
 }
