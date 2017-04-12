@@ -1,5 +1,6 @@
 const md5 = require('md5')
-const redis = require('redis').createClient(process.env.REDIS_URL)
+// const redis = require('redis').createClient(process.env.REDIS_URL)
+const redis = require('redis').createClient('redis://h:pbe5be72f8b4bc2fab19cc057ae84dec9ed0bad696cdc2569b807a5fd31267d93@ec2-34-206-56-163.compute-1.amazonaws.com:28029')
 
 // Cookie id for authentication.
 const cooKey = 'sid'
